@@ -1,0 +1,94 @@
+/*#f06b4c - orange*/
+/*#4CD1F0 - turquoise*/
+/*#0095F9 - blue*/
+
+body { 
+	background: #4CD1F0; 
+	font-family: 'Alegreya Sans SC', sans-serif;
+	text-align: center;
+	padding: 0;
+	margin: 0;
+	color: white;
+}
+
+h1{
+	font-family: 'Montserrat', sans-serif;
+	font-size: 80px;
+	text-align: center;
+	margin: 5px;
+	color: black;
+}
+
+nav.navbar{
+	background: black;
+	padding: 1rem;
+}
+
+nav a {
+	color: white;
+	margin: 0 2rem;
+}
+
+.current {
+	padding: 2rem 0;
+}
+.weatherContainer {
+	background: #0095F9;
+	padding: 3px;
+}
+
+.currentIcon {
+	font-size: 80px;
+	display: inline-block;
+}
+
+.currentTemperature {
+	display: inline-block;
+	font-size: 80px;
+	margin: 0;
+}
+
+.hourlyTemperature {
+	font-size: 23px;
+}
+
+.daily {
+    height: 100%;
+    display: inline-block;
+    padding: 2rem;
+    width: 63px;
+    vertical-align: top;
+    margin: 1px;
+    color: white;
+    text-align: left;
+}
+
+.hourly {
+    display: inline-block;
+    padding: 1rem;
+    width: 37px;
+   	vertical-align: top;
+    background: #0095F9;
+    margin: 1px;
+    color: white;
+    text-align: left;
+}
+
+.column1 {
+	display: inline-block;
+}
+
+.column2 {
+	display: inline-block;
+	padding: 0 2rem;
+	margin: 0 1rem;
+	border-left: 1px solid white;
+	border-right: 1px solid white;
+}
+
+.column3 {
+	display: inline-block;
+
+
+}
+

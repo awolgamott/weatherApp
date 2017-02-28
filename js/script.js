@@ -9,6 +9,16 @@ var handleCoords = function(coordsObj) {
 var handleError = function (err){
 	console.log('error!', err)
 }
+
+var hideGif = function(){
+	var loadRain = document.querySelector('#loadingGif')
+	loadRain.style.display = 'none'	
+}
+
+var showGif = function(){
+	var loadRain = document.querySelector('#loadingGif')
+	loadRain.style.display = 'block'	
+}
 // decides which actions to execute based on whats in the "hash"
 var controller = function() {
 	var hashString = location.hash.substring(1),
@@ -20,24 +30,33 @@ var controller = function() {
 	document.querySelector(".currentLink").href = "#" + latitude + "/" + longitude + "/" + "current"
 	document.querySelector(".dailyLink").href = "#" + latitude + "/" + longitude + "/" + "daily"
 	document.querySelector(".hourlyLink").href = "#" + latitude + "/" + longitude + "/" + "hourly"
+	document.querySelector(".ninoLink").href = "#" + latitude + "/" + longitude + "/" + "elnino"
 
 	if (weatherType === 'current'){
 
 		var darkSkyURL = 'https://api.darksky.net/forecast/ee3481b4e29845ee8da6c02efeb4aa88/' + latitude + ',' + longitude + '?callback=?'//putting darksky api in a variable
 		var darkSkyPromise = $.getJSON(darkSkyURL) ///actually make api call to darkSkyURL
 		darkSkyPromise.then(handleCurrent) //when response comes back send repoObj to handleCurrentResponse
+		showGif()
 	}
 
 	else if(weatherType === 'daily') {
 		var darkSkyURL = 'https://api.darksky.net/forecast/ee3481b4e29845ee8da6c02efeb4aa88/' + latitude + ',' + longitude + '?callback=?' //putting darksky api in a variable
 		var darkSkyPromise = $.getJSON(darkSkyURL) //actually make api call to darkSkyURL
 		darkSkyPromise.then(handleDaily) //when response comes back send repoObj to handleDailyResponse
+		showGif()
 	}
 
 	else if(weatherType === 'hourly') {
 		var darkSkyURL = 'https://api.darksky.net/forecast/ee3481b4e29845ee8da6c02efeb4aa88/' + latitude + ',' + longitude + '?callback=?' //putting darksky api in a variable
 		var darkSkyPromise = $.getJSON(darkSkyURL) //actually make api call to darkSkyURL
 		darkSkyPromise.then(handleHourly) //when response comes back send repoObj to handleHourlyResponse
+		showGif()
+	}
+
+	else if(weatherType === 'elnino') {
+		var weatherContainerNode = document.querySelector('.weatherContainer')
+		weatherContainerNode.innerHTML = '<img src="http://i.giphy.com/UiksAEg7Qkso0.gif" class="elnino">'
 	}
 
 }
@@ -47,15 +66,18 @@ var handleCurrent = function(currentWeatherObj) {
 	var allCurrentWeatherHTML = ''
 	var weatherContainerNode = document.querySelector('.weatherContainer') //grabbing the location of where we want to put current html
 		weatherContainerNode.innerHTML = makeCurrentHTML(currentWeatherObj) //convert all makecurrenthtml to string
+		hideGif()
 }
 var handleDaily = function(dailyWeatherObj){
 	var weatherContainerNode = document.querySelector('.weatherContainer')
 	weatherContainerNode.innerHTML = makeDailyHTML(dailyWeatherObj) //convert all makedailyhtml to string
+	hideGif()
 
 }
 var handleHourly = function(hourlyWeatherObj){
 	var weatherContainerNode = document.querySelector('.weatherContainer')
 	weatherContainerNode.innerHTML = makeHourlyHTML(hourlyWeatherObj) //convert all makehourlyhtml to string
+	hideGif()
 }
 
 var makeCurrentHTML = function(currentObj){ //takes in a single object converts the object into html format

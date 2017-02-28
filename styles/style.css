@@ -88,7 +88,13 @@ nav a {
 
 .column3 {
 	display: inline-block;
-
-
 }
 
+#loadingGif{
+	text-align: center;
+	display: block;
+}
+.elnino {
+	width: 800px;
+	padding: 50px;
+}

@@ -1,9 +1,16 @@
 var handleCoords = function(coordsObj) {
-	var lat = coordsObj.coords.latitude,
-		lng = coordsObj.coords.longitude
+	var latitude = coordsObj.coords.latitude,
+		longitude = coordsObj.coords.longitude
 
-	var hashString = lat + '/' + lng + '/current'
+	var hashString = latitude + '/' + longitude + '/current'
+
 	location.hash = hashString	
+	//moved into handleCoords because we still need to make this happen but removing old controller
+	document.querySelector(".currentLink").href = "#" + latitude + "/" + longitude + "/" + "current"
+	document.querySelector(".dailyLink").href = "#" + latitude + "/" + longitude + "/" + "daily"
+	document.querySelector(".hourlyLink").href = "#" + latitude + "/" + longitude + "/" + "hourly"
+	document.querySelector(".ninoLink").href = "#" + latitude + "/" + longitude + "/" + "elnino"
+
 }
 
 var handleError = function (err){
@@ -19,48 +26,88 @@ var showGif = function(){
 	var loadRain = document.querySelector('#loadingGif')
 	loadRain.style.display = 'block'	
 }
-// decides which actions to execute based on whats in the "hash"
-var controller = function() {
-	var hashString = location.hash.substring(1),
-		hashParts = hashString.split('/')
-		latitude = hashParts[0],
-		longitude = hashParts[1],
-		weatherType = hashParts[2]
-	
-	document.querySelector(".currentLink").href = "#" + latitude + "/" + longitude + "/" + "current"
-	document.querySelector(".dailyLink").href = "#" + latitude + "/" + longitude + "/" + "daily"
-	document.querySelector(".hourlyLink").href = "#" + latitude + "/" + longitude + "/" + "hourly"
-	document.querySelector(".ninoLink").href = "#" + latitude + "/" + longitude + "/" + "elnino"
 
-	if (weatherType === 'current'){
 
+var LatLongRouter = Backbone.Router.extend({
+	routes: {
+		":lat/:lng/current": "showCurrentWeather",
+		":lat/:lng/daily": "showDailyWeather",
+		":lat/:lng/hourly": "showHourlyWeather",
+		":lat/:lng/elnino": "showElNinoWeather",
+		"*default/" : "showGif",
+	},
+
+	showCurrentWeather : function(latitude, longitude){
+		//moved promises from old if statements into here
 		var darkSkyURL = 'https://api.darksky.net/forecast/ee3481b4e29845ee8da6c02efeb4aa88/' + latitude + ',' + longitude + '?callback=?'//putting darksky api in a variable
 		var darkSkyPromise = $.getJSON(darkSkyURL) ///actually make api call to darkSkyURL
-		darkSkyPromise.then(handleCurrent) //when response comes back send repoObj to handleCurrentResponse
+		darkSkyPromise.then(handleCurrent) //when response comes back send repoObj to handleCurrent
 		showGif()
-	}
+	},
 
-	else if(weatherType === 'daily') {
+	showDailyWeather : function(latitude, longitude){
 		var darkSkyURL = 'https://api.darksky.net/forecast/ee3481b4e29845ee8da6c02efeb4aa88/' + latitude + ',' + longitude + '?callback=?' //putting darksky api in a variable
 		var darkSkyPromise = $.getJSON(darkSkyURL) //actually make api call to darkSkyURL
-		darkSkyPromise.then(handleDaily) //when response comes back send repoObj to handleDailyResponse
+		darkSkyPromise.then(handleDaily) //when response comes back send repoObj to handleDaily
 		showGif()
-	}
+	},
 
-	else if(weatherType === 'hourly') {
+	showHourlyWeather : function(latitude, longitude){
 		var darkSkyURL = 'https://api.darksky.net/forecast/ee3481b4e29845ee8da6c02efeb4aa88/' + latitude + ',' + longitude + '?callback=?' //putting darksky api in a variable
 		var darkSkyPromise = $.getJSON(darkSkyURL) //actually make api call to darkSkyURL
-		darkSkyPromise.then(handleHourly) //when response comes back send repoObj to handleHourlyResponse
+		darkSkyPromise.then(handleHourly) //when response comes back send repoObj to handleHourly
 		showGif()
-	}
-
-	else if(weatherType === 'elnino') {
+	},
+	showElNinoWeather : function(){
 		var weatherContainerNode = document.querySelector('.weatherContainer')
-		weatherContainerNode.innerHTML = '<img src="http://i.giphy.com/UiksAEg7Qkso0.gif" class="elnino">'
+		weatherContainerNode.innerHTML = '<iframe width="560" height="315" src="https://www.youtube.com/embed/mkSRUf02gu8?rel=0&amp;controls=0&amp;showinfo=0?rel=0&autoplay=1" frameborder="0" allowfullscreen class="elnino"></iframe>'
 	}
+})
 
-}
-window.addEventListener('hashchange', controller)
+// decides which actions to execute based on whats in the "hash"
+// var controller = function() {
+// 	var hashString = location.hash.substring(1),
+// 		hashParts = hashString.split('/')
+// 		latitude = hashParts[0],
+// 		longitude = hashParts[1],
+// 		weatherType = hashParts[2]
+
+
+	
+	// document.querySelector(".currentLink").href = "#" + latitude + "/" + longitude + "/" + "current"
+	// document.querySelector(".dailyLink").href = "#" + latitude + "/" + longitude + "/" + "daily"
+	// document.querySelector(".hourlyLink").href = "#" + latitude + "/" + longitude + "/" + "hourly"
+	// document.querySelector(".ninoLink").href = "#" + latitude + "/" + longitude + "/" + "elnino"
+
+// 	if (weatherType === 'current'){
+
+// 		var darkSkyURL = 'https://api.darksky.net/forecast/ee3481b4e29845ee8da6c02efeb4aa88/' + latitude + ',' + longitude + '?callback=?'//putting darksky api in a variable
+// 		var darkSkyPromise = $.getJSON(darkSkyURL) ///actually make api call to darkSkyURL
+// 		darkSkyPromise.then(handleCurrent) //when response comes back send weatherObj to handleCurrent
+// 		showGif()
+// 	}
+
+// 	else if(weatherType === 'daily') {
+// 		var darkSkyURL = 'https://api.darksky.net/forecast/ee3481b4e29845ee8da6c02efeb4aa88/' + latitude + ',' + longitude + '?callback=?' //putting darksky api in a variable
+// 		var darkSkyPromise = $.getJSON(darkSkyURL) //actually make api call to darkSkyURL
+// 		darkSkyPromise.then(handleDaily) //when response comes back send weatherObj to handleDaily
+// 		showGif()
+// 	}
+
+// 	else if(weatherType === 'hourly') {
+// 		var darkSkyURL = 'https://api.darksky.net/forecast/ee3481b4e29845ee8da6c02efeb4aa88/' + latitude + ',' + longitude + '?callback=?' //putting darksky api in a variable
+// 		var darkSkyPromise = $.getJSON(darkSkyURL) //actually make api call to darkSkyURL
+// 		darkSkyPromise.then(handleHourly) //when response comes back send weatherObj to handleHourly
+// 		showGif()
+// 	}
+
+// 	else if(weatherType === 'elnino') {
+// 		var weatherContainerNode = document.querySelector('.weatherContainer')
+// 		weatherContainerNode.innerHTML = '<img src="http://i.giphy.com/UiksAEg7Qkso0.gif" class="elnino">'
+// 	}
+
+// }
+// window.addEventListener('hashchange', controller)
 
 var handleCurrent = function(currentWeatherObj) {
 	var allCurrentWeatherHTML = ''
@@ -99,7 +146,6 @@ var makeCurrentHTML = function(currentObj){ //takes in a single object converts 
 		getHTML += '<div >' + '<p class="currentWindspeed">Windspeed' + '</br>' + (currentObj.currently.windSpeed) + 'mph</p>' + '</div>'
 		getHTML += '<div>' + '<p class="currentPressure">Pressure' + '</br>' + (currentObj.currently.pressure) + 'mb</p>' + '</div>'
 	getHTML +='</div>'
-	
 	
 	return getHTML //return entire running total
 }
@@ -140,7 +186,6 @@ var makeDay = function(darkSkyDayTime) {
 var makeHour = function(darkSkyHourTime) {
 	var darkSkyHourTime = darkSkyHourTime * 1000
 	var formattedHourly = moment(darkSkyHourTime).format('h:mm a')
-	// var formattedHourly = moment(darkSkyHourTime).calendar()
 	return formattedHourly
 }
 
@@ -183,6 +228,8 @@ var makeHourlyHTML = function(hourlyObj){ //takes in a single object converts th
 
 navigator.geolocation.getCurrentPosition(handleCoords,handleError)
 
+var router = new LatLongRouter() 
 
+Backbone.history.start() // this tells backbone to start listening for hashchange events. 
 
 

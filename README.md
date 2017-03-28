@@ -11,6 +11,7 @@ El Nino as played by Chris Farley
 ## Resources
 
 jquery sourcecode: https://code.jquery.com/jquery-3.0.0.min.js
+
 forecastio api docs: https://developer.forecast.io/docs/v2
 
 ## LICENSE
